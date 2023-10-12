@@ -18,23 +18,20 @@ public class SolarWatchController : ControllerBase
     }
 
     [HttpGet("GetSolarData")]
-    public SolarWatch GetSolarData([Required]string city)
+    public ActionResult<SolarWatch> GetSolarData([Required]string city)
     {
         string unprocessedGeoData = _dataProvider.ProvideGeoData(city);
         GeoData processedGeoData = _jsonProcessor.ProcessGeoData(unprocessedGeoData);
-        if (processedGeoData is { Lat: 0, Lon: 0 })
+        if (processedGeoData is { Lat: null, Lon: null })
         {
-            return new SolarWatch
-            {
-                Date = DateTime.Now,
-                City = "City not found!"
-            };
+            return NotFound("Error getting solar data!");
+
         }
 
         string unprocessedSolarData = _dataProvider.ProvideSolarData(processedGeoData);
         SolarWatch processedSolarData = _jsonProcessor.ProcessSolarData(unprocessedSolarData, processedGeoData.City);
         
-        return processedSolarData;
+        return Ok(processedSolarData);
     }
     
 }
