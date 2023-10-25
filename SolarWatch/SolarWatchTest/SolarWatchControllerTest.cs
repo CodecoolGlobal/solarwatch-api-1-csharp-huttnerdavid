@@ -25,16 +25,16 @@ public class SolarWatchControllerTest
     }
 
     [Test]
-    public void GetSolarDataReturnsNotFoundIfDataProviderFails()
+    public async Task GetSolarDataReturnsNotFoundIfDataProviderFails()
     {
-        var result = _controller.GetSolarData("DAGFASGA");
+        var result = await _controller.GetSolarData("DAGFASGA");
         Assert.That(result.Result, Is.InstanceOf(typeof(NotFoundObjectResult)));
     }
 
     [Test]
-    public void GetSolarDataReturnsOkIfItGetsCorrectCity()
+    public async Task GetSolarDataReturnsOkIfItGetsCorrectCity()
     {
-        var result = _controller.GetSolarData("Budapest");
+        var result = await _controller.GetSolarData("Budapest");
         Assert.That(result.Result, Is.InstanceOf(typeof(OkObjectResult)));
     }
 }

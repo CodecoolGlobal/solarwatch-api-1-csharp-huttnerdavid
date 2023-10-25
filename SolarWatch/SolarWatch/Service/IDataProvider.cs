@@ -2,6 +2,6 @@
 
 public interface IDataProvider
 {
-    public string ProvideGeoData(string city);
-    public string ProvideSolarData(GeoData geoData);
+    public Task<string> ProvideGeoData(string city);
+    public Task<string> ProvideSolarData(GeoData geoData);
 }
