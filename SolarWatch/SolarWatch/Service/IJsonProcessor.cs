@@ -1,9 +1,11 @@
 ﻿
+using SolarWatch.Model;
+
 namespace SolarWatch.Service;
 
 public interface IJsonProcessor
 {
-    public GeoData ProcessGeoData(string data);
-    public SolarWatch ProcessSolarData(string data, string city);
+    public City ProcessGeoData(string data);
+    public SunsetTimes ProcessSolarData(string data, string city);
 
 }

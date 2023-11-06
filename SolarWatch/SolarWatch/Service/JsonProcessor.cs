@@ -1,27 +1,41 @@
 ﻿using System.Text.Json;
+using SolarWatch.Model;
 
 namespace SolarWatch.Service;
 
 public class JsonProcessor : IJsonProcessor
 {
 
-    public GeoData ProcessGeoData(string data)
+    public City ProcessGeoData(string data)
     {
         try
         {
             JsonDocument json = JsonDocument.Parse(data);
             JsonElement lat;
             JsonElement lon;
+            JsonElement state;
             if (json.RootElement.ValueKind == JsonValueKind.Array)
             {
                 JsonElement firstElement = json.RootElement.EnumerateArray().First();
                 if (firstElement.TryGetProperty("lat", out lat) && firstElement.TryGetProperty("lon", out lon))
                 {
-                    return new GeoData
+                    if (firstElement.TryGetProperty("state", out state))
+                    {
+                        return new City
+                        {
+                            Lon = lon.GetDouble(),
+                            Lat = lat.GetDouble(),
+                            Name = firstElement.GetProperty("name").GetString(),
+                            State = state.GetString(),
+                            Country = firstElement.GetProperty("country").GetString()
+                        };
+                    }
+                    return new City
                     {
                         Lon = lon.GetDouble(),
                         Lat = lat.GetDouble(),
-                        City = firstElement.GetProperty("name").GetString()
+                        Name = firstElement.GetProperty("name").GetString(),
+                        Country = firstElement.GetProperty("country").GetString()
                     };
                 }
 
@@ -30,27 +44,26 @@ public class JsonProcessor : IJsonProcessor
         }
         catch (Exception e)
         {
-            return new GeoData
+            return new City
             {
                 Lon = null,
                 Lat = null
             };
         }
-        return new GeoData
+        return new City
         {
             Lon = null,
             Lat = null
         };
     }
 
-    public SolarWatch ProcessSolarData(string data, string city)
+    public SunsetTimes ProcessSolarData(string data, string city)
     {
         JsonDocument json = JsonDocument.Parse(data);
         JsonElement results = json.RootElement.GetProperty("results");
-        return new SolarWatch()
+        return new SunsetTimes
         {
-            City = city,
-            Date = DateTime.Now,
+            Name = city,
             Sunrise = results.GetProperty("sunrise").GetString(),
             Sunset = results.GetProperty("sunset").GetString()
         };

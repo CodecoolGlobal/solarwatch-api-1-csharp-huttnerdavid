@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using SolarWatch.Model;
 
 namespace SolarWatch.Service;
 
@@ -16,9 +17,9 @@ public class DataProvider : IDataProvider
         return await response.Content.ReadAsStringAsync();
     }
 
-    public async Task<string> ProvideSolarData(GeoData geoData)
+    public async Task<string> ProvideSolarData(City city)
     {
-        var url = $"https://api.sunrise-sunset.org/json?lat={geoData.Lat}&lng={geoData.Lon}";
+        var url = $"https://api.sunrise-sunset.org/json?lat={city.Lat}&lng={city.Lon}";
         
         var client = new HttpClient();
         
