@@ -4,6 +4,6 @@ public class SunsetTimes
 {
     public int Id { get; init; }
     public string? Name { get; init; }
-    public string? Sunset { get; init; }
-    public string? Sunrise { get; init; }
+    public string? Sunset { get; set; }
+    public string? Sunrise { get; set; }
 }

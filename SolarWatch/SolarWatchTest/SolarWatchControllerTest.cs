@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using SolarWatch.Controllers;
 using SolarWatch.Service;
-using SolarWatch = SolarWatch.SolarWatch;
 
 namespace SolarWatchTest;
 
