@@ -1,33 +1,11 @@
 import './App.css';
-import UserRegistration from './Pages/UserRegistration';
 
-const App = () => {
-
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Layout/>,
-      errorElement: <ErrorPage />,
-      children: [
-        {
-          path: "/",
-          element: <div></div>
-        },
-        {
-          path: "/registration",
-          element: <UserRegistration />,
-        }
-      ],
-    },
-  ]);
-
+function App() {
   return (
-    <React.StrictMode>
-      <RouterProvider router={router}>
-        <Layout />
-      </RouterProvider>
-    </React.StrictMode>
+    <div className="App">
+      
+    </div>
   );
-};
+}
 
 export default App;

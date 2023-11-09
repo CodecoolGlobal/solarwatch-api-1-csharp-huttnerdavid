@@ -4,9 +4,9 @@ import Loading from "../Loading";
 const EmployeeForm = ({ onSave, user, onCancel }) => {
 
   const [loading, setLoading] = useState(false);
-  const [userName, setUserName] = useState(user?.userName ?? "");
-  const [password, setPassword] = useState(user?.password ?? "");
-  const [email, setEmail] = useState(user?.email ?? "");
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
   const onSubmit = (e) => {
     e.preventDefault();
