@@ -1,36 +1,31 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import { useState } from 'react';
 
-const App = () => {
+import Layout from "./Pages/Layout";
+import Home from "./Pages/Home";
+import Register from "./Pages/Register";
+import Login from "./Pages/Login";
+import SolarWatch from './Pages/SolarWatch';
 
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Layout/>,
-      errorElement: <ErrorPage />,
-      children: [
-        {
-          path: "/",
-          element: <WelcomePage />
-        },
-        {
-          path: "/registration",
-          element: <UserRegistration />,
-        }
-      ],
-    },
-  ]);
+export default function App() {
+  const [isLoggedIn, setLogin] = useState(false);
 
   return (
-    <React.StrictMode>
-      <RouterProvider router={router}>
-        <Layout />
-      </RouterProvider>
-    </React.StrictMode>
-  );
-};
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout isLoggedIn={isLoggedIn}/>}>
+          <Route index element={<Home isLoggedIn={isLoggedIn}/>}/>
+          <Route path="solar-watch" element={<SolarWatch />}/>
+          <Route path="registration" element={<Register />}/>
+          <Route path="login" element={<Login setLogin={setLogin}/>}/>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  )
+}
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
