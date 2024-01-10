@@ -9,6 +9,7 @@ import Home from "./Pages/Home";
 import Register from "./Pages/Register";
 import Login from "./Pages/Login";
 import SolarWatch from './Pages/SolarWatch';
+import PrivateRoute from './Components/PrivateRoute';
 
 export default function App() {
   const [isLoggedIn, setLogin] = useState(false);
@@ -18,7 +19,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Layout isLoggedIn={isLoggedIn}/>}>
           <Route index element={<Home isLoggedIn={isLoggedIn}/>}/>
-          <Route path="solar-watch" element={<SolarWatch />}/>
+          <Route path="solar-watch" element={<PrivateRoute element={<SolarWatch/>} isLoggedIn={isLoggedIn}/>}/>
           <Route path="registration" element={<Register />}/>
           <Route path="login" element={<Login setLogin={setLogin}/>}/>
         </Route>

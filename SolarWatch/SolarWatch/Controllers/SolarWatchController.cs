@@ -59,7 +59,7 @@ public class SolarWatchController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error getting solar data");
-            return NotFound("Error getting solar data");
+            return BadRequest("Error getting solar data");
         }
     }
 
