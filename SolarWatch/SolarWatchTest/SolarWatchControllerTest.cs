@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Moq;
 using SolarWatch.Controllers;
+using SolarWatch.Data;
 using SolarWatch.Service;
 
 namespace SolarWatchTest;
@@ -13,6 +14,7 @@ public class SolarWatchControllerTest
     private DataProvider _dataProviderMock;
     private JsonProcessor _jsonProcessorMock;
     private SolarWatchController _controller;
+    private SolarWatchApiContext _dbContext;
 
     [SetUp]
     public void SetUp()
@@ -20,7 +22,8 @@ public class SolarWatchControllerTest
         _loggerMock = new Mock<ILogger<SolarWatchController>>();
         _dataProviderMock = new DataProvider();
         _jsonProcessorMock = new JsonProcessor();
-        _controller = new SolarWatchController(_loggerMock.Object, _dataProviderMock, _jsonProcessorMock);
+        _dbContext = new SolarWatchApiContext();
+        _controller = new SolarWatchController(_loggerMock.Object, _dataProviderMock, _jsonProcessorMock, _dbContext);
     }
 
     [Test]

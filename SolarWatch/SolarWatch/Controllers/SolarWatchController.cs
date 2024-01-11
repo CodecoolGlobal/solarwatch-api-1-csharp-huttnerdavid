@@ -12,20 +12,21 @@ public class SolarWatchController : ControllerBase
     private readonly ILogger<SolarWatchController> _logger;
     private readonly IDataProvider _dataProvider;
     private readonly IJsonProcessor _jsonProcessor;
+    private readonly SolarWatchApiContext _dbContext;
 
     public SolarWatchController(ILogger<SolarWatchController> logger, IDataProvider dataProvider,
-        IJsonProcessor jsonProcessor)
+        IJsonProcessor jsonProcessor, SolarWatchApiContext dbContext)
     {
         _logger = logger;
         _jsonProcessor = jsonProcessor;
         _dataProvider = dataProvider;
+        _dbContext = dbContext;
     }
 
     [HttpGet("GetSolarData"), Authorize(Roles = "User, Admin")]
     public async Task<ActionResult<SunsetTimes>> GetSolarData([Required] string cityName)
     {
-        await using var dbContext = new SolarWatchApiContext();
-        var city = dbContext.Cities.FirstOrDefault(c => c.Name == cityName);
+        var city = _dbContext.Cities.FirstOrDefault(c => c.Name == cityName);
         if (city == null)
         {
             string unprocessedCityData = await _dataProvider.ProvideGeoData(cityName);
@@ -35,13 +36,13 @@ public class SolarWatchController : ControllerBase
                 return NotFound("Solar data not found in SolarWatch!");
             }
 
-            dbContext.Add(cityData);
+            _dbContext.Add(cityData);
 
             string unprocessedSunsetTimes = await _dataProvider.ProvideSolarData(cityData);
             var sunsetData = _jsonProcessor.ProcessSolarData(unprocessedSunsetTimes, cityData.Name);
 
-            dbContext.Add(sunsetData);
-            await dbContext.SaveChangesAsync();
+            _dbContext.Add(sunsetData);
+            await _dbContext.SaveChangesAsync();
 
             return Ok(sunsetData);
         }
@@ -50,8 +51,8 @@ public class SolarWatchController : ControllerBase
         {
             string unprocessedSunsetTimes = await _dataProvider.ProvideSolarData(city);
             var sunsetData = _jsonProcessor.ProcessSolarData(unprocessedSunsetTimes, city.Name);
-            dbContext.Add(sunsetData);
-            await dbContext.SaveChangesAsync();
+            _dbContext.Add(sunsetData);
+            await _dbContext.SaveChangesAsync();
 
             return Ok(sunsetData);
         }
@@ -66,21 +67,20 @@ public class SolarWatchController : ControllerBase
     [HttpPost("PostSolarData"), Authorize(Roles = "Admin")]
     public async Task<ActionResult<SunsetTimes>> PostSolarData([Required]string cityName, [Required]string sunset, [Required]string sunrise)
     {
-        await using var dbContext = new SolarWatchApiContext();
-        var sunsetTimes = dbContext.SunsetTimes.FirstOrDefault(c => c.Name == cityName);
+        var sunsetTimes = _dbContext.SunsetTimes.FirstOrDefault(c => c.Name == cityName);
         if (sunsetTimes != null)
         {
             return Conflict("City already exists!");
         }
         try
         {
-            dbContext.Add(new SunsetTimes
+            _dbContext.Add(new SunsetTimes
             {
                 Name = cityName,
                 Sunrise = sunrise,
                 Sunset = sunset
             });
-            await dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
             return Ok("SolarWatch data added!");
         }
@@ -94,8 +94,7 @@ public class SolarWatchController : ControllerBase
     [HttpPatch("UpdateSolarData"), Authorize(Roles = "Admin")]
     public async Task<ActionResult<SunsetTimes>> UpdateSolarData([Required]string cityName, [Required]string sunset, [Required]string sunrise)
     {
-        await using var dbContext = new SolarWatchApiContext();
-        var sunsetTimes = dbContext.SunsetTimes.FirstOrDefault(c => c.Name == cityName);
+        var sunsetTimes = _dbContext.SunsetTimes.FirstOrDefault(c => c.Name == cityName);
         if (sunsetTimes == null)
         {
             return NotFound($"City {cityName} not found in the database!");
@@ -104,7 +103,7 @@ public class SolarWatchController : ControllerBase
         {
             sunsetTimes.Sunset = sunset;
             sunsetTimes.Sunrise = sunrise;
-            await dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             return Ok("Changes saved!");
         }
         catch (Exception e)
@@ -117,8 +116,7 @@ public class SolarWatchController : ControllerBase
     [HttpDelete("DeleteData"), Authorize(Roles = "Admin")]
     public async Task<ActionResult<string>> DeleteData([Required]string cityName)
     {
-        await using var dbContext = new SolarWatchApiContext();
-        var sunsetTimes = dbContext.SunsetTimes.FirstOrDefault(c => c.Name == cityName);
+        var sunsetTimes = _dbContext.SunsetTimes.FirstOrDefault(c => c.Name == cityName);
         if (sunsetTimes == null)
         {
             return NotFound($"{cityName} does not exist in the database!");
@@ -126,8 +124,8 @@ public class SolarWatchController : ControllerBase
 
         try
         {
-            dbContext.Remove(sunsetTimes);
-            await dbContext.SaveChangesAsync();
+            _dbContext.Remove(sunsetTimes);
+            await _dbContext.SaveChangesAsync();
             return Ok("Data deleted!");
         }
         catch (Exception e)
