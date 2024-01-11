@@ -64,6 +64,62 @@ public class SolarWatchController : ControllerBase
         }
     }
 
+    [HttpGet("GetSolarDataRange"), Authorize(Roles = "Admin, User")]
+    public async Task<ActionResult<SunsetTimes[]>> GetSolarDataRange([Required] string cityName, [Required] string startDate, [Required] string endDate)
+    {
+        DateTime startDateParsed;
+        DateTime endDateParsed;
+        if (DateTime.TryParse(startDate,out startDateParsed) && DateTime.TryParse(endDate, out endDateParsed))
+        {
+            var city = _dbContext.Cities.FirstOrDefault(c => c.Name == cityName);
+            if (city == null)
+            {
+                string unprocessedCityData = await _dataProvider.ProvideGeoData(cityName);
+                var cityData = _jsonProcessor.ProcessGeoData(unprocessedCityData);
+                if (cityData is { Lat: null, Lon: null })
+                {
+                    return NotFound("Solar data not found in SolarWatch!");
+                }
+
+                _dbContext.Add(cityData);
+
+                string unprocessedSunsetTimes = await _dataProvider.ProvideSolarData(cityData, startDateParsed, endDateParsed);
+                var sunsetData = _jsonProcessor.ProcessMultipleSolarData(unprocessedSunsetTimes, cityData.Name);
+
+                foreach (var sunset in sunsetData)
+                {
+                    _dbContext.Add(sunset);
+                }
+                
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(sunsetData);
+            }
+            try
+            {
+                string unprocessedSunsetTimes = await _dataProvider.ProvideSolarData(city, startDateParsed, endDateParsed);
+                var sunsetData = _jsonProcessor.ProcessMultipleSolarData(unprocessedSunsetTimes, city.Name);
+
+                foreach (var sunset in sunsetData)
+                {
+                    _dbContext.Add(sunset);
+                }
+                
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(sunsetData);
+            }
+
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error getting solar data");
+                return BadRequest("Error getting solar data");
+            }
+        }
+
+        return BadRequest("Date was not in the right format!");
+    }
+
     [HttpPost("PostSolarData"), Authorize(Roles = "Admin")]
     public async Task<ActionResult<SunsetTimes>> PostSolarData([Required]string cityName, [Required]string sunset, [Required]string sunrise)
     {

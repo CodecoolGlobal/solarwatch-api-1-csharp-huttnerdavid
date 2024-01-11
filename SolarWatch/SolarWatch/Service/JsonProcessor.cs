@@ -68,4 +68,22 @@ public class JsonProcessor : IJsonProcessor
             Sunset = results.GetProperty("sunset").GetString()
         };
     }
+
+    public SunsetTimes[] ProcessMultipleSolarData(string data, string city)
+    {
+        JsonDocument json = JsonDocument.Parse(data);
+        JsonElement results = json.RootElement.GetProperty("results");
+        SunsetTimes[] sunsetTimesArray = new SunsetTimes[results.GetArrayLength()];
+        for (int i = 0; i < results.GetArrayLength(); i++)
+        {
+            sunsetTimesArray[i] = new SunsetTimes
+            {
+                Name = city,
+                Sunrise = results[i].GetProperty("sunrise").GetString(),
+                Sunset = results[i].GetProperty("sunset").GetString()
+            };
+        }
+
+        return sunsetTimesArray;
+    }
 }

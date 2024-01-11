@@ -6,4 +6,5 @@ public interface IDataProvider
 {
     public Task<string> ProvideGeoData(string city);
     public Task<string> ProvideSolarData(City city);
+    public Task<string> ProvideSolarData(City city, DateTime startDate, DateTime endDate);
 }
