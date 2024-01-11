@@ -8,7 +8,7 @@ const PrivateRoute = ({ element, isLoggedIn }) => {
         isLoggedIn ? (
             element
         ) : (
-            <div>
+            <div className='homeDiv'>
                 <p>You're not supposed to be here!</p>
                 <button onClick={()=>{navigate("/")}}>Go back</button>
             </div>

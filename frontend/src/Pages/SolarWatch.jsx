@@ -17,18 +17,18 @@ const SolarWatch = () => {
 
   return (
     <>
-    <div className="form">
+    <div className="formTemplate">
       <input
         type="text"
         placeholder="Please input where you want to check SolarWatch!"
         onChange={(e) => {
           setCity(e.target.value);
         }}
-      />
+      /><br/>
       <button onClick={handleSolarWatch}>Start SolarWatch</button>
     </div>
     {solarData ? 
-      <div className="SolarData">
+      <div className="solarData">
         <p>City: {solarData.name}</p>
         <p>Sunrise at: {solarData.sunrise}</p>
         <p>Sunset at: {solarData.sunset}</p>

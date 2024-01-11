@@ -26,10 +26,11 @@ const Login = ({setLogin}) => {
     }
 
     return(
-    <div>
-        <input type="text" placeholder="email" onChange={(e)=>{setEmail(e.target.value)}}/>
-        <input type="password" placeholder="password" onChange={(e)=>{setPassword(e.target.value)}}/>
-        <input type="button" onClick={handleSubmit} value={"Submit"}/>
+    <div className="formTemplate">
+        <p>Login</p>
+        <input type="text" placeholder="email" onChange={(e)=>{setEmail(e.target.value)}}/><br/>
+        <input type="password" placeholder="password" onChange={(e)=>{setPassword(e.target.value)}}/><br/>
+        <button onClick={handleSubmit}>Submit</button>
     </div>)
 }
 export default Login;

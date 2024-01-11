@@ -1,7 +1,7 @@
 const Home = ({isLoggedIn}) => {
     return(
-    <div>
-        {isLoggedIn ? <p>Welcome click on SolarWatch to use the app!</p> : <p>Please login!</p>}
+    <div className="homeDiv">
+        {isLoggedIn ? <p>Welcome click on SolarWatch to use the app!</p> : <p>You are currently not logged in! Please login to use SolarWatch!</p>}
     </div>)
 }
 export default Home;

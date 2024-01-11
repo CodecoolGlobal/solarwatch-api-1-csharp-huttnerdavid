@@ -5,9 +5,114 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(69, 69, 75);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+input{
+  padding-left: 10px;
+}
+
+.navBar{
+  margin:auto;
+  margin-top: 5px;
+  width: 20%;
+  background-color: rgb(219, 222, 225);
+  border-radius: 5px;
+  text-align: center;
+  padding: 1px;
+}
+
+.navBar ul{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navBar li{
+  display: inline-block;
+  padding: 2px 15px;
+  border: 1px solid transparent;
+  color: black;
+}
+
+.navBar li:hover{
+  border: 1px solid black;
+  border-radius: 4px;
+  background-color: lightblue;
+  color: black;
+}
+
+button:hover{
+  background-color: rgb(227, 226, 226);
+  cursor: pointer;
+}
+
+.homeDiv{
+  width: 30%;
+  height: fit-content;
+  margin: auto;
+  text-align: center;
+  background-color: aliceblue;
+  border-radius: 5px;
+  margin-top: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.formTemplate{
+  width: 30%;
+  height: fit-content;
+  margin: auto;
+  margin-top: 20px;
+  text-align: center;
+  background-color: aliceblue;
+  border-radius: 5px;
+  padding-top: 3%;
+  padding-bottom: 3%;
+}
+
+.formTemplate input{
+  width: 50%;
+  border-radius: 5px;
+  border: 1px solid black;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.formTemplate button{
+  width: 20%;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+.solarData{
+  width: 30%;
+  height: fit-content;
+  margin: auto;
+  text-align: center;
+  background-color: aliceblue;
+  border-radius: 5px;
+  margin-top: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+a:link { 
+  text-decoration: none;
+  color: black;
+} 
+a:visited { 
+  text-decoration: none; 
+  color:black;
+} 
+a:hover { 
+  text-decoration: none;
+} 
+a:active { 
+  text-decoration: none;
 }
